@@ -15,7 +15,7 @@ namespace ProgramDesignMock230211.Grids
         /// <summary>
         /// Gridの可視化部分
         /// </summary>
-        private readonly IGridView _grid3dViewMono;
+        private readonly IGridView _gridViewMono;
 
         /// <summary>
         /// コンストラクタ
@@ -25,7 +25,7 @@ namespace ProgramDesignMock230211.Grids
         public GridPresenter(GridModel model, IGridView gridView)
         {
             _gridModel = model;
-            _grid3dViewMono = gridView;
+            _gridViewMono = gridView;
         }
     }
 }
