@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using ProgramDesignMock230211.Markers;
 using ProgramDesignMock230211.Pieces;
 using UniRx;
 using UnityEngine;
-using UnityEngine.Pool;
 
 namespace ProgramDesignMock230211.Grids.Views
 {
@@ -19,24 +17,14 @@ namespace ProgramDesignMock230211.Grids.Views
         [SerializeField] private LayerMask _boardColliderLayer;
 
         /// <summary>
-        ///     配置可能位置を可視化するMakerのPrefab
-        /// </summary>
-        [SerializeField] private MarkerMono _markerPrefab;
-
-        /// <summary>
         ///     コマのPrefab
         /// </summary>
         [SerializeField] private PieceMono _piecePrefab;
 
         /// <summary>
-        ///     生成したMakerのキャッシュ
-        /// </summary>
-        private readonly List<MarkerMono> _cachedGeneratedMarkerList = new();
-
-        /// <summary>
         ///     MarkerのObjectPool
         /// </summary>
-        private ObjectPool<MarkerMono> _markerObjectPool;
+        [SerializeField] private MarkerObjectPoolMono _markerObjectPool;
 
         /// <summary>
         ///     コマの2次元配列
@@ -72,8 +60,6 @@ namespace ProgramDesignMock230211.Grids.Views
         /// </summary>
         private void Awake()
         {
-            _markerObjectPool = new ObjectPool<MarkerMono>(() => Instantiate(_markerPrefab), x => x.gameObject.SetActive(true),
-                x => x.gameObject.SetActive(false));
             _rayCamera = Camera.main;
         }
 
@@ -95,24 +81,10 @@ namespace ProgramDesignMock230211.Grids.Views
             }
         }
 
-        /// <summary>
-        ///     OnDestroy関数
-        /// </summary>
-        private void OnDestroy()
-        {
-            _markerObjectPool?.Clear();
-        }
-
         /// <inheritdoc />
         void IGridView.DisplayPlaceablePos(PlaceablePosInfo placeablePosInfo)
         {
-            _markerObjectPool.Clear();
-            foreach (var cache in _cachedGeneratedMarkerList)
-            {
-                _markerObjectPool.Release(cache);
-            }
-
-            _cachedGeneratedMarkerList.Clear();
+            _markerObjectPool.ReleaseAll();
             if (placeablePosInfo.PlaceablePosCount == 0)
             {
                 return;
@@ -120,9 +92,7 @@ namespace ProgramDesignMock230211.Grids.Views
 
             foreach (var pos in placeablePosInfo.PlaceablePosList)
             {
-                var marker = _markerObjectPool.Get();
-                marker.SetWorldPos(ConvertGridPosToWorldPos(pos));
-                _cachedGeneratedMarkerList.Add(marker);
+                _markerObjectPool.Get().SetWorldPos(ConvertGridPosToWorldPos(pos));
             }
         }
 
