@@ -16,9 +16,10 @@ namespace ProgramDesignMock230211.Pieces
         /// <summary>
         ///     コマを更新する
         /// </summary>
+        /// <param name="pieceScale">サイズ</param>
         /// <param name="worldPos">ワールド座標</param>
         /// <param name="pieceColorKind">コマ色</param>
-        public void UpdatePiece(Vector3 worldPos, PieceColorKind pieceColorKind)
+        public void UpdatePiece(float pieceScale, Vector3 worldPos, PieceColorKind pieceColorKind)
         {
             Assert.IsTrue(pieceColorKind is PieceColorKind.Black or PieceColorKind.White);
             //TODO Animationをつける
@@ -32,6 +33,7 @@ namespace ProgramDesignMock230211.Pieces
                     break;
             }
 
+            transform.localScale = Vector3.one * pieceScale;
             transform.position = worldPos;
             _cachedPieceColorKind = pieceColorKind;
         }

@@ -29,7 +29,7 @@ namespace ProgramDesignMock230211.Markers
         /// </summary>
         private void Awake()
         {
-            _markerObjectPool = new ObjectPool<MarkerMono>(() => Instantiate(_markerPrefab), x => x.gameObject.SetActive(true),
+            _markerObjectPool = new ObjectPool<MarkerMono>(() => Instantiate(_markerPrefab, transform), x => x.gameObject.SetActive(true),
                 x => x.gameObject.SetActive(false));
         }
 
