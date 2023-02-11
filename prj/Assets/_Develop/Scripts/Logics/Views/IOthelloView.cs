@@ -1,16 +1,17 @@
 ﻿using System;
+using ProgramDesignMock230211.Grids;
 using ProgramDesignMock230211.Pieces;
 using UnityEngine;
 
-namespace ProgramDesignMock230211.Grids.Views
+namespace ProgramDesignMock230211.Logics.Views
 {
     /// <summary>
-    ///     Gridを可視化するViewのInterface
+    ///     MVPのView部分
     /// </summary>
-    public interface IGridView
+    public interface IOthelloView
     {
         /// <summary>
-        ///     Grid選択を購読するIObservable
+        ///     ViewでのGrid選択を購読するIObservable
         /// </summary>
         IObservable<Vector2Int> OnGridSelected { get; }
 

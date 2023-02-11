@@ -7,7 +7,7 @@ namespace ProgramDesignMock230211.Markers
     /// <summary>
     ///     MarkerのObjectPoolを管理するクラス
     /// </summary>
-    public class MarkerObjectPoolMono : MonoBehaviour
+    public sealed class MarkerObjectPoolMono : MonoBehaviour
     {
         /// <summary>
         ///     配置可能位置を可視化するMakerのPrefab
@@ -41,7 +41,10 @@ namespace ProgramDesignMock230211.Markers
             _markerObjectPool?.Clear();
         }
 
-        public void ReleaseAll()
+        /// <summary>
+        ///     可視化済みのMarkerを全て非表示にする
+        /// </summary>
+        public void HideAllMarker()
         {
             foreach (var cache in _cachedGeneratedMarkerList)
             {
@@ -51,7 +54,11 @@ namespace ProgramDesignMock230211.Markers
             _cachedGeneratedMarkerList.Clear();
         }
 
-        public MarkerMono Get()
+        /// <summary>
+        ///     Markerを返す
+        /// </summary>
+        /// <returns>Marker</returns>
+        public MarkerMono GetMarker()
         {
             var marker = _markerObjectPool.Get();
             _cachedGeneratedMarkerList.Add(marker);

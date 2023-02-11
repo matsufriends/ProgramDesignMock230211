@@ -3,7 +3,7 @@ using System.Linq;
 using ProgramDesignMock230211.Pieces;
 using UnityEngine;
 
-namespace ProgramDesignMock230211.Grids
+namespace ProgramDesignMock230211.Logics
 {
     /// <summary>
     ///     配置可能な位置情報群

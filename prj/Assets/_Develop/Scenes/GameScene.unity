@@ -232,8 +232,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de4005db76224519a9d523fe6c719538, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _grid3dView: {fileID: 1346033576}
-  _gridSize: {x: 20, y: 20}
+  _othello3dView: {fileID: 1346033576}
+  _gridSize: {x: 8, y: 8}
 --- !u!4 &320879944
 Transform:
   m_ObjectHideFlags: 0
@@ -326,14 +326,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
-  m_LocalRotation: {x: 0.6106233, y: 0.0040031625, z: -0.0016749946, w: 0.7919094}
-  m_LocalPosition: {x: 3.662066, y: 7.159501, z: 1.2112577}
+  m_LocalRotation: {x: 0.57607573, y: -0, z: -0, w: 0.81739634}
+  m_LocalPosition: {x: 3.5, y: 6.4, z: 0.52}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 70.35, y: 0, z: 0}
 --- !u!114 &330585547
 MonoBehaviour:
   m_ObjectHideFlags: 0

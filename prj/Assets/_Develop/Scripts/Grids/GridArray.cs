@@ -78,7 +78,7 @@ namespace ProgramDesignMock230211.Grids
         /// <param name="gridPos">判定するGrid座標</param>
         /// <param name="value">取得した色</param>
         /// <returns>座標が配列内だったかどうか</returns>
-        public bool TryGetPieceColor(Vector2Int gridPos, out T value)
+        public bool TryGetValue(Vector2Int gridPos, out T value)
         {
             if (gridPos.x < 0 || GridSize.x <= gridPos.x)
             {

@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ProgramDesignMock230211.Grids;
 using ProgramDesignMock230211.Pieces;
 using UniRx;
 using UnityEngine;
 using UnityEngine.Assertions;
 
-namespace ProgramDesignMock230211.Grids
+namespace ProgramDesignMock230211.Logics
 {
     /// <summary>
-    ///     オセロのロジック担当
+    ///     MVPのModel部分
     /// </summary>
-    public sealed class GridModel
+    public sealed class OthelloModel
     {
         /// <summary>
         ///     8方向の基準ベクトル
@@ -29,7 +30,7 @@ namespace ProgramDesignMock230211.Grids
         };
 
         /// <summary>
-        ///     Gridを管理する配列
+        ///     Gridを管理するクラス
         /// </summary>
         private readonly GridArray<PieceColorKind> _gridArray;
 
@@ -57,7 +58,7 @@ namespace ProgramDesignMock230211.Grids
         ///     コンストラクタ
         /// </summary>
         /// <param name="gridSize">盤面のサイズ</param>
-        public GridModel(Vector2Int gridSize)
+        public OthelloModel(Vector2Int gridSize)
         {
             _gridArray = new GridArray<PieceColorKind>(gridSize);
             _currentPlayerPieceColorKind = PieceColorKind.Black;
@@ -162,7 +163,7 @@ namespace ProgramDesignMock230211.Grids
             var turnOverPosList = new List<Vector2Int>();
             turnOverPosses = turnOverPosList;
             Assert.IsTrue(putPieceColorKind != PieceColorKind.None);
-            if (_gridArray.TryGetPieceColor(pos, out var otherColor) == false || otherColor != PieceColorKind.None)
+            if (_gridArray.TryGetValue(pos, out var otherColor) == false || otherColor != PieceColorKind.None)
             {
                 return false;
             }
@@ -171,14 +172,14 @@ namespace ProgramDesignMock230211.Grids
             foreach (var dir in s_Unit8Directions)
             {
                 //隣のマスが相手のコマでなければ抜ける
-                if (_gridArray.TryGetPieceColor(pos + dir, out var other) == false || other != putPieceColorKind.OppositeColorKind())
+                if (_gridArray.TryGetValue(pos + dir, out var other) == false || other != putPieceColorKind.OppositeColorKind())
                 {
                     continue;
                 }
 
                 for (var dif = 2; dif < max; dif++)
                 {
-                    if (_gridArray.TryGetPieceColor(pos + dir * dif, out other) == false)
+                    if (_gridArray.TryGetValue(pos + dir * dif, out other) == false)
                     {
                         break;
                     }

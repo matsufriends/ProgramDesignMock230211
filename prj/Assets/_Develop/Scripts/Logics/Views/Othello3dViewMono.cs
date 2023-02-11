@@ -1,15 +1,16 @@
 ﻿using System;
 using ProgramDesignMock230211.Boards;
+using ProgramDesignMock230211.Grids;
 using ProgramDesignMock230211.Markers;
 using ProgramDesignMock230211.Pieces;
 using UnityEngine;
 
-namespace ProgramDesignMock230211.Grids.Views
+namespace ProgramDesignMock230211.Logics.Views
 {
     /// <summary>
-    ///     オセロの可視化部分
+    ///     Othello MVPのView 3d部分
     /// </summary>
-    public sealed class Grid3dViewMono : MonoBehaviour, IGridView
+    public sealed class Othello3dViewMono : MonoBehaviour, IOthelloView
     {
         /// <summary>
         ///     コマのPrefab
@@ -42,9 +43,9 @@ namespace ProgramDesignMock230211.Grids.Views
         }
 
         /// <inheritdoc />
-        void IGridView.DisplayPlaceablePos(PlaceablePosInfo placeablePosInfo)
+        void IOthelloView.DisplayPlaceablePos(PlaceablePosInfo placeablePosInfo)
         {
-            _markerObjectPool.ReleaseAll();
+            _markerObjectPool.HideAllMarker();
             if (placeablePosInfo.PlaceablePosCount == 0)
             {
                 return;
@@ -52,12 +53,12 @@ namespace ProgramDesignMock230211.Grids.Views
 
             foreach (var pos in placeablePosInfo.PlaceablePosList)
             {
-                _markerObjectPool.Get().SetWorldPos(_board.PieceScale, _board.ConvertGridPosToWorldPos(pos));
+                _markerObjectPool.GetMarker().SetWorldPos(_board.PieceScale, _board.ConvertGridPosToWorldPos(pos));
             }
         }
 
         /// <inheritdoc />
-        void IGridView.UpdatePiece(GridUpdateInfo<PieceColorKind> gridUpdateInfo)
+        void IOthelloView.UpdatePiece(GridUpdateInfo<PieceColorKind> gridUpdateInfo)
         {
             var pos = gridUpdateInfo.GridPos;
             if (_piece2dArray[pos.x, pos.y] == null)

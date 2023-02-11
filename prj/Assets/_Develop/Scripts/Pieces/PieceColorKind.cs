@@ -1,7 +1,8 @@
-﻿using System;
-
-namespace ProgramDesignMock230211.Pieces
+﻿namespace ProgramDesignMock230211.Pieces
 {
+    /// <summary>
+    ///     コマ色の列挙型
+    /// </summary>
     public enum PieceColorKind
     {
         None = 0,
@@ -9,21 +10,28 @@ namespace ProgramDesignMock230211.Pieces
         White = 2,
     }
 
+    /// <summary>
+    ///     <see cref="PieceColorKind" />の拡張クラス
+    /// </summary>
     public static class PieceColorKindEx
     {
+        /// <summary>
+        ///     反対のコマ色を返す拡張メソッド
+        ///     NoneのときはNoneを返す
+        /// </summary>
+        /// <param name="pieceColorKind">基準のコマ色</param>
+        /// <returns>基準のコマ色と反対のコマ色</returns>
         public static PieceColorKind OppositeColorKind(this PieceColorKind pieceColorKind)
         {
             switch (pieceColorKind)
             {
-                case PieceColorKind.None:
-                    return PieceColorKind.None;
                 case PieceColorKind.Black:
                     return PieceColorKind.White;
                 case PieceColorKind.White:
                     return PieceColorKind.Black;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(pieceColorKind), pieceColorKind, null);
             }
+
+            return PieceColorKind.None;
         }
     }
 }

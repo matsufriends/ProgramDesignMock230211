@@ -1,5 +1,5 @@
-﻿using ProgramDesignMock230211.Grids;
-using ProgramDesignMock230211.Grids.Views;
+﻿using ProgramDesignMock230211.Logics;
+using ProgramDesignMock230211.Logics.Views;
 using UnityEngine;
 
 namespace ProgramDesignMock230211
@@ -10,12 +10,12 @@ namespace ProgramDesignMock230211
     public sealed class GameManagerMono : MonoBehaviour
     {
         /// <summary>
-        ///     Gridの3dView
+        ///     Othelloの3dView
         /// </summary>
-        [SerializeField] private Grid3dViewMono _grid3dView;
+        [SerializeField] private Othello3dViewMono _othello3dView;
 
         /// <summary>
-        ///     Gridのサイズ
+        ///     盤面サイズ
         /// </summary>
         [SerializeField] private Vector2Int _gridSize;
 
@@ -24,7 +24,7 @@ namespace ProgramDesignMock230211
         /// </summary>
         private void Awake()
         {
-            var presenter = new GridPresenter(_gridSize, _grid3dView);
+            var presenter = new OthelloPresenter(_gridSize, _othello3dView);
         }
     }
 }
