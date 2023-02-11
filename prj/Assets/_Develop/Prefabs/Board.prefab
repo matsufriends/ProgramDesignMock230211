@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6039850223461781394}
   - component: {fileID: 4765306941807452587}
   - component: {fileID: 2697658973775996392}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Grid_Circle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 8070831775389039009}
   - component: {fileID: 8070831775389039020}
   - component: {fileID: 8070831775389039011}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Grid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -178,7 +178,7 @@ GameObject:
   - component: {fileID: 8070831776191391905}
   - component: {fileID: 8070831776191391904}
   - component: {fileID: 8070831776191391907}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -272,7 +272,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8070831776619994307}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Board
   m_TagString: Untagged
   m_Icon: {fileID: 0}

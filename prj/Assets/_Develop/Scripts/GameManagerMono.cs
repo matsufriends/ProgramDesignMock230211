@@ -24,8 +24,7 @@ namespace ProgramDesignMock230211
         /// </summary>
         private void Awake()
         {
-            var model = new GridModel(_gridSize);
-            var presenter = new GridPresenter(model, _grid3dView);
+            var presenter = new GridPresenter(_gridSize, _grid3dView);
         }
     }
 }
