@@ -2,7 +2,7 @@
 Unity 2021.3.12f1
 
 # 概要
-[ハムさん](https://twitter.com/hamu_game2000)の依頼で、設計を意識してオセロを作成しました。
+[ハムさん](https://twitter.com/hamu_game2000)の依頼で、設計を意識したオセロ開発を行いました。
 
 [YoutubeLive](https://youtube.com/live/dD_BC-BK2pQ?feature=share)に、約5時間分の作業配信アーカイブが残っています。
 
