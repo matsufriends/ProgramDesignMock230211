@@ -1,11 +1,13 @@
-﻿using ProgramDesignMock230211.Grids.Views;
+﻿using System;
+using ProgramDesignMock230211.Grids.Views;
+using UniRx;
 
 namespace ProgramDesignMock230211.Grids
 {
     /// <summary>
     /// GridのModelとViewを仲介するPresenter
     /// </summary>
-    public sealed class GridPresenter
+    public sealed class GridPresenter : IDisposable
     {
         /// <summary>
         /// Gridのロジック部分
@@ -18,6 +20,11 @@ namespace ProgramDesignMock230211.Grids
         private readonly IGridView _gridViewMono;
 
         /// <summary>
+        /// MVP関連の購読一括解除用のCompositeDisposable
+        /// </summary>
+        private readonly CompositeDisposable _compositeDisposable = new();
+
+        /// <summary>
         /// コンストラクタ
         /// </summary>
         /// <param name="model">Gridのロジック部分</param>
@@ -26,6 +33,14 @@ namespace ProgramDesignMock230211.Grids
         {
             _gridModel = model;
             _gridViewMono = gridView;
+            //TODO: 購読処理
+            _gridModel.OnUpdatePlaceablePos.Subscribe(gridView.DisplayPlaceablePos).AddTo(_compositeDisposable);
+            _gridModel.InitializeBoard();
+        }
+
+        public void Dispose()
+        {
+            _compositeDisposable.Dispose();
         }
     }
 }
