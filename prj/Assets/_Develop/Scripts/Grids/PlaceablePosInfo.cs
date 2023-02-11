@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using ProgramDesignMock230211.Pieces;
 using UnityEngine;
 
@@ -22,17 +23,17 @@ namespace ProgramDesignMock230211.Grids
         /// <summary>
         ///     配置可能な位置List
         /// </summary>
-        public readonly IReadOnlyList<Vector2Int> PlaceablePosList;
+        public readonly IEnumerable<Vector2Int> PlaceablePosList;
 
         /// <summary>
         ///     コンストラクタ
         /// </summary>
         /// <param name="placeableColorKind">配置するコマ色</param>
         /// <param name="placeablePosList">配置可能な位置List</param>
-        public PlaceablePosInfo(PieceColorKind placeableColorKind, IReadOnlyList<Vector2Int> placeablePosList)
+        public PlaceablePosInfo(PieceColorKind placeableColorKind, IEnumerable<Vector2Int> placeablePosList)
         {
             PlaceableColorKind = placeableColorKind;
-            PlaceablePosCount = placeablePosList.Count;
+            PlaceablePosCount = placeablePosList.Count();
             PlaceablePosList = placeablePosList;
         }
     }

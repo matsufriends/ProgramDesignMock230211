@@ -57,16 +57,16 @@ namespace ProgramDesignMock230211.Grids.Views
         }
 
         /// <inheritdoc />
-        void IGridView.UpdatePiece(PieceUpdateInfo pieceUpdateInfo)
+        void IGridView.UpdatePiece(GridUpdateInfo<PieceColorKind> gridUpdateInfo)
         {
-            var pos = pieceUpdateInfo.PlacePos;
+            var pos = gridUpdateInfo.GridPos;
             if (_piece2dArray[pos.x, pos.y] == null)
             {
                 _piece2dArray[pos.x, pos.y] = Instantiate(_piecePrefab, _board.transform);
             }
 
-            var worldPos = _board.ConvertGridPosToWorldPos(pieceUpdateInfo.PlacePos);
-            _piece2dArray[pos.x, pos.y].UpdatePiece(_board.PieceScale, worldPos, pieceUpdateInfo.PieceColorKind);
+            var worldPos = _board.ConvertGridPosToWorldPos(gridUpdateInfo.GridPos);
+            _piece2dArray[pos.x, pos.y].UpdatePiece(_board.PieceScale, worldPos, gridUpdateInfo.GridValue);
         }
     }
 }

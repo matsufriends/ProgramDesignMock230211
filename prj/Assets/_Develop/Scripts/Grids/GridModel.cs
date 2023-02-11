@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ProgramDesignMock230211.Pieces;
 using UniRx;
 using UnityEngine;
@@ -28,9 +29,9 @@ namespace ProgramDesignMock230211.Grids
         };
 
         /// <summary>
-        ///     盤面のサイズ
+        ///     Gridを管理する配列
         /// </summary>
-        private readonly Vector2Int _gridSize;
+        private readonly GridArray<PieceColorKind> _gridArray;
 
         /// <summary>
         ///     現在のプレイヤーのコマ色
@@ -38,20 +39,9 @@ namespace ProgramDesignMock230211.Grids
         private PieceColorKind _currentPlayerPieceColorKind;
 
         /// <summary>
-        ///     Grid情報を保存する2次元配列
-        ///     左下を0,0とし、[x,y]で指定する
-        /// </summary>
-        private readonly PieceColorKind[,] _pieceColorKind2dArray;
-
-        /// <summary>
         ///     配置可能な位置情報を通知するSubject
         /// </summary>
         private readonly Subject<PlaceablePosInfo> _updatePlaceablePosSubject = new();
-
-        /// <summary>
-        ///     コマの配置を通知するSubject
-        /// </summary>
-        private readonly Subject<PieceUpdateInfo> _updatePieceSubject = new();
 
         /// <summary>
         ///     配置可能な位置情報の変更を購読するIObservable
@@ -61,7 +51,7 @@ namespace ProgramDesignMock230211.Grids
         /// <summary>
         ///     コマの配置を購読するIObservable
         /// </summary>
-        public IObservable<PieceUpdateInfo> OnUpdatePiece => _updatePieceSubject;
+        public IObservable<GridUpdateInfo<PieceColorKind>> OnUpdatePiece => _gridArray.OnUpdateGrid;
 
         /// <summary>
         ///     コンストラクタ
@@ -69,11 +59,8 @@ namespace ProgramDesignMock230211.Grids
         /// <param name="gridSize">盤面のサイズ</param>
         public GridModel(Vector2Int gridSize)
         {
-            Assert.IsTrue(gridSize.x > 0 && gridSize.y > 0);
-            Assert.IsTrue(gridSize.x % 2 == 0 && gridSize.y % 2 == 0);
-            _gridSize = gridSize;
+            _gridArray = new GridArray<PieceColorKind>(gridSize);
             _currentPlayerPieceColorKind = PieceColorKind.Black;
-            _pieceColorKind2dArray = new PieceColorKind[gridSize.x, gridSize.y];
         }
 
         /// <summary>
@@ -82,11 +69,11 @@ namespace ProgramDesignMock230211.Grids
         public void InitializeBoard()
         {
             //右上と左下が黒コマでスタート
-            var rightTopPos = _gridSize / 2;
-            UpdatePieceArray(rightTopPos, PieceColorKind.Black);
-            UpdatePieceArray(rightTopPos - Vector2Int.one, PieceColorKind.Black);
-            UpdatePieceArray(rightTopPos + Vector2Int.left, PieceColorKind.White);
-            UpdatePieceArray(rightTopPos + Vector2Int.down, PieceColorKind.White);
+            var rightTopPos = _gridArray.GridSize / 2;
+            _gridArray.UpdateGrid(rightTopPos, PieceColorKind.Black);
+            _gridArray.UpdateGrid(rightTopPos - Vector2Int.one, PieceColorKind.Black);
+            _gridArray.UpdateGrid(rightTopPos + Vector2Int.left, PieceColorKind.White);
+            _gridArray.UpdateGrid(rightTopPos + Vector2Int.down, PieceColorKind.White);
             UpdatePlaceablePos(GeneratePlaceablePosInfo(_currentPlayerPieceColorKind));
         }
 
@@ -105,58 +92,9 @@ namespace ProgramDesignMock230211.Grids
         /// <returns>配置可能な位置情報郡</returns>
         private PlaceablePosInfo GeneratePlaceablePosInfo(PieceColorKind pieceColorKind)
         {
-            var placeablePosList = new List<Vector2Int>();
-            for (var x = 0; x < _gridSize.x; x++)
-            {
-                for (var y = 0; y < _gridSize.y; y++)
-                {
-                    var pos = new Vector2Int(x, y);
-                    if (IsPlaceablePos(pos, pieceColorKind, out _))
-                    {
-                        placeablePosList.Add(pos);
-                    }
-                }
-            }
-
-            var placeablePosInfo = new PlaceablePosInfo(pieceColorKind, placeablePosList);
+            var placeablePosInfo = new PlaceablePosInfo(pieceColorKind,
+                _gridArray.AllGridPosses.Where(pos => IsPlaceablePos(pos, pieceColorKind, out _)));
             return placeablePosInfo;
-        }
-
-        /// <summary>
-        ///     コマの配列を更新する
-        /// </summary>
-        /// <param name="placePos">配置する座標</param>
-        /// <param name="pieceColorKind">配置するコマ色</param>
-        private void UpdatePieceArray(Vector2Int placePos, PieceColorKind pieceColorKind)
-        {
-            Assert.IsTrue(0 <= placePos.x && placePos.x < _gridSize.x);
-            Assert.IsTrue(0 <= placePos.y && placePos.y < _gridSize.y);
-            _pieceColorKind2dArray[placePos.x, placePos.y] = pieceColorKind;
-            _updatePieceSubject.OnNext(new PieceUpdateInfo(placePos, pieceColorKind));
-        }
-
-        /// <summary>
-        ///     <paramref name="pos" />が配列に含まれていた場合、コマ色を返す
-        /// </summary>
-        /// <param name="pos">判定する座標</param>
-        /// <param name="pieceColorKind">取得したコマ色</param>
-        /// <returns>座標が配列内だったかどうか</returns>
-        private bool TryGetPieceColor(Vector2Int pos, out PieceColorKind pieceColorKind)
-        {
-            if (pos.x < 0 || _gridSize.x <= pos.x)
-            {
-                pieceColorKind = PieceColorKind.None;
-                return false;
-            }
-
-            if (pos.y < 0 || _gridSize.y <= pos.y)
-            {
-                pieceColorKind = PieceColorKind.None;
-                return false;
-            }
-
-            pieceColorKind = _pieceColorKind2dArray[pos.x, pos.y];
-            return true;
         }
 
         /// <summary>
@@ -176,10 +114,10 @@ namespace ProgramDesignMock230211.Grids
             {
                 foreach (var pos in turnOverPosses)
                 {
-                    UpdatePieceArray(pos, _currentPlayerPieceColorKind);
+                    _gridArray.UpdateGrid(pos, _currentPlayerPieceColorKind);
                 }
 
-                UpdatePieceArray(placePos, _currentPlayerPieceColorKind);
+                _gridArray.UpdateGrid(placePos, _currentPlayerPieceColorKind);
                 return true;
             }
 
@@ -224,27 +162,23 @@ namespace ProgramDesignMock230211.Grids
             var turnOverPosList = new List<Vector2Int>();
             turnOverPosses = turnOverPosList;
             Assert.IsTrue(putPieceColorKind != PieceColorKind.None);
-            Assert.IsTrue(0 <= pos.x && pos.x < _gridSize.x);
-            Assert.IsTrue(0 <= pos.y && pos.y < _gridSize.y);
-            var max = Mathf.Max(_gridSize.x, _gridSize.y);
-            if (TryGetPieceColor(pos, out var otherColor) == false || otherColor != PieceColorKind.None)
+            if (_gridArray.TryGetPieceColor(pos, out var otherColor) == false || otherColor != PieceColorKind.None)
             {
                 return false;
             }
 
+            var max = Mathf.Max(_gridArray.GridSize.x, _gridArray.GridSize.y);
             foreach (var dir in s_Unit8Directions)
             {
                 //隣のマスが相手のコマでなければ抜ける
-                if (TryGetPieceColor(pos + dir, out var other) == false || other != putPieceColorKind.OppositeColorKind())
+                if (_gridArray.TryGetPieceColor(pos + dir, out var other) == false || other != putPieceColorKind.OppositeColorKind())
                 {
                     continue;
                 }
 
-                var hasSameColorAfterOtherColor = false;
-                var dif = 2;
-                for (; dif < max; dif++)
+                for (var dif = 2; dif < max; dif++)
                 {
-                    if (TryGetPieceColor(pos + dir * dif, out other) == false)
+                    if (_gridArray.TryGetPieceColor(pos + dir * dif, out other) == false)
                     {
                         break;
                     }
@@ -256,16 +190,12 @@ namespace ProgramDesignMock230211.Grids
 
                     if (other == putPieceColorKind)
                     {
-                        hasSameColorAfterOtherColor = true;
-                        break;
-                    }
-                }
+                        for (var i = 1; i < dif; i++)
+                        {
+                            turnOverPosList.Add(pos + dir * i);
+                        }
 
-                if (hasSameColorAfterOtherColor)
-                {
-                    for (var i = 1; i < dif; i++)
-                    {
-                        turnOverPosList.Add(pos + dir * i);
+                        break;
                     }
                 }
             }

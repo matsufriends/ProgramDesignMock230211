@@ -1,4 +1,5 @@
 ﻿using System;
+using ProgramDesignMock230211.Pieces;
 using UnityEngine;
 
 namespace ProgramDesignMock230211.Grids.Views
@@ -28,7 +29,7 @@ namespace ProgramDesignMock230211.Grids.Views
         /// <summary>
         ///     コマの更新処理
         /// </summary>
-        /// <param name="pieceUpdateInfo">コマの更新情報</param>
-        void UpdatePiece(PieceUpdateInfo pieceUpdateInfo);
+        /// <param name="gridUpdateInfo">コマの更新情報</param>
+        void UpdatePiece(GridUpdateInfo<PieceColorKind> gridUpdateInfo);
     }
 }
